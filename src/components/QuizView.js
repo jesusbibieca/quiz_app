@@ -88,9 +88,10 @@ function QuizView() {
     (actions) => actions.notification.setContent
   );
 
-  const progress = (currentQuestion / constants.TOTAL_QUESTIONS) * 100;
+  const progress = ((currentQuestion + 1) / constants.TOTAL_QUESTIONS) * 100;
   const showSuccessMessage = correctCount >= constants.GOAL;
   const tooManyIncorrect = incorrectCount > constants.INCORRECT_THRESHOLD;
+  const endOfQuiz = currentQuestion >= constants.TOTAL_QUESTIONS - 1;
 
   React.useEffect(() => {
     fetchUsers();
@@ -111,7 +112,7 @@ function QuizView() {
   const handleCloseNotification = () => {
     toggleNotification();
     setAutocompleteDisable(false);
-    if (!tooManyIncorrect) {
+    if (!tooManyIncorrect && !endOfQuiz) {
       nextQuestion();
     }
   };
@@ -135,15 +136,17 @@ function QuizView() {
                 direction="column"
                 className={classes.progressContainer}
               >
-                <Typography
-                  align="center"
-                  gutterBottom
-                  variant="h6"
-                  component="h2"
-                >
-                  You&apos;ve answered {currentQuestion} out of 50 question/s
-                  and {correctCount} are correct.
-                </Typography>
+                {endOfQuiz ? null : (
+                  <Typography
+                    align="center"
+                    gutterBottom
+                    variant="h6"
+                    component="h2"
+                  >
+                    You&apos;ve answered {currentQuestion} out of 50 question/s
+                    and {correctCount} are correct.
+                  </Typography>
+                )}
                 <LinearProgress
                   className={classes.progress}
                   variant="determinate"
@@ -171,7 +174,7 @@ function QuizView() {
                     as a study resource.
                   </Typography>
                 </>
-              ) : (
+              ) : endOfQuiz ? null : (
                 <Selection
                   disabled={autocompleteDisable}
                   handleChange={handleSelectionChange}

@@ -27,7 +27,7 @@ function Notification({ handleClose }) {
       open={showNotification}
       onClose={handleClose}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      autoHideDuration={2500}
+      autoHideDuration={1000}
       TransitionComponent={SlideTransition}
     >
       <Alert className={classes.snackbar} severity={severity}>
